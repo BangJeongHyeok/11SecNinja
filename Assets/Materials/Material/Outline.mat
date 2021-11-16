@@ -37,4 +37,5 @@ Material:
     - _OutlineThickness: 0.036
     m_Colors:
     - Color_b2da2841cab9465eba1f0198fa68f08b: {r: 0.5176471, g: 2, b: 0, a: 0}
+    - _Color: {r: 0.78431374, g: 2.9960785, b: 0, a: 1}
   m_BuildTextureStacks: []
