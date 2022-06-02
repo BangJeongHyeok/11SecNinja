@@ -155,6 +155,7 @@ public class CharacterControl : MonoBehaviour
     {
         Vector3 ViewportTransform = mainCamera.WorldToViewportPoint(transform.position);
         //화면 중심으로 튕겨낸다
+        Vector3.Reflect(rigid.velocity, Vector3.right);//이거 당장은 좀 이상한데 반사각으로 구하는거 넣긴 해야될듯
         ViewportTransform = new Vector2(Mathf.Clamp(ViewportTransform.x, 0, 1), Mathf.Clamp(ViewportTransform.y, 0, 1));
         Vector3 ConvertedPosition = mainCamera.ViewportToWorldPoint(ViewportTransform);
         ConvertedPosition = new Vector3(ConvertedPosition.x, ConvertedPosition.y, 0);
