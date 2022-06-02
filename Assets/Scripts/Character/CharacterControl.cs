@@ -21,6 +21,8 @@ public class CharacterControl : MonoBehaviour
     Material BallMaterial;
     Material TrailMaterial;
     Color CurColor;
+    Vector3 ScreenMinRect;
+    Vector3 ScreenMaxRect;
 
     //더블탭 딜레이
     [SerializeField] float TouchDelay = 0;
@@ -41,9 +43,16 @@ public class CharacterControl : MonoBehaviour
         CurColor = BallMaterial.color;
     }
 
+    void SetScreenRect()
+    {
+        ScreenMinRect = Camera.main.ScreenToWorldPoint(Camera.main.ViewportToScreenPoint(Vector3.zero));
+        ScreenMaxRect = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+    }
+
     void Start()
     {
         ComponenetSetting();
+        SetScreenRect();
     }
 
     // Update is called once per frame
@@ -134,7 +143,9 @@ public class CharacterControl : MonoBehaviour
     bool ScreenColliderCheck()
     {
         Vector3 ViewportTransform = mainCamera.WorldToViewportPoint(transform.position);
-        if (ViewportTransform.x <= 0 || ViewportTransform.x >= 1 || ViewportTransform.y <= 0 || ViewportTransform.y >= 1)//화면밖으로 넘어가려고 하면
+        //if (ViewportTransform.x <= 0 || ViewportTransform.x >= 1 || ViewportTransform.y <= 0 || ViewportTransform.y >= 1)//화면밖으로 넘어가려고 하면
+        var characterVec = transform.position;
+        if (characterVec.x <= ScreenMinRect.x || characterVec.x >= ScreenMaxRect.x || characterVec.y <= ScreenMinRect.y || characterVec.y >= ScreenMaxRect.y)//화면밖으로 넘어가려고 하면
         {
             //화면 중심으로 튕겨낸다
             ViewportTransform = new Vector2(Mathf.Clamp(ViewportTransform.x,0,1), Mathf.Clamp(ViewportTransform.y, 0, 1));
