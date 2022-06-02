@@ -58,7 +58,8 @@ public class CharacterControl : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        ScreenColliderCheck();
+        if (ScreenColliderCheck())
+            BouncingByScreenRect();
     }
     private void Update()
     {
@@ -142,21 +143,24 @@ public class CharacterControl : MonoBehaviour
 
     bool ScreenColliderCheck()
     {
-        Vector3 ViewportTransform = mainCamera.WorldToViewportPoint(transform.position);
-        //if (ViewportTransform.x <= 0 || ViewportTransform.x >= 1 || ViewportTransform.y <= 0 || ViewportTransform.y >= 1)//화면밖으로 넘어가려고 하면
         var characterVec = transform.position;
         if (characterVec.x <= ScreenMinRect.x || characterVec.x >= ScreenMaxRect.x || characterVec.y <= ScreenMinRect.y || characterVec.y >= ScreenMaxRect.y)//화면밖으로 넘어가려고 하면
         {
-            //화면 중심으로 튕겨낸다
-            ViewportTransform = new Vector2(Mathf.Clamp(ViewportTransform.x,0,1), Mathf.Clamp(ViewportTransform.y, 0, 1));
-            Vector3 ConvertedPosition = mainCamera.ViewportToWorldPoint(ViewportTransform);
-            ConvertedPosition = new Vector3(ConvertedPosition.x, ConvertedPosition.y,0);
-            transform.position = ConvertedPosition;
-            rigid.velocity = Vector3.zero;
-            rigid.AddForce((Vector3.zero - transform.position).normalized * ReflectPower, ForceMode2D.Impulse);
             return true;
         }
         return false;
+    }
+
+    void BouncingByScreenRect()
+    {
+        Vector3 ViewportTransform = mainCamera.WorldToViewportPoint(transform.position);
+        //화면 중심으로 튕겨낸다
+        ViewportTransform = new Vector2(Mathf.Clamp(ViewportTransform.x, 0, 1), Mathf.Clamp(ViewportTransform.y, 0, 1));
+        Vector3 ConvertedPosition = mainCamera.ViewportToWorldPoint(ViewportTransform);
+        ConvertedPosition = new Vector3(ConvertedPosition.x, ConvertedPosition.y, 0);
+        transform.position = ConvertedPosition;
+        rigid.velocity = Vector3.zero;
+        rigid.AddForce((Vector3.zero - transform.position).normalized * ReflectPower, ForceMode2D.Impulse);
     }
 
     void MaterialColorChange(int ColorType)
